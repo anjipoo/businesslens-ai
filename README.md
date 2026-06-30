@@ -1,58 +1,264 @@
-# BusinessLens AI — Multi-Agent Consulting Platform
+# BusinessLens AI
 
-A high-performance, single-file multi-agent strategic business consulting architecture built specifically for the **Kaggle AI Agents Capstone**. This implementation features a clean, highly scannable UI layer powered by FastAPI, SQLite, React, and Vite, orchestrated using the official **Google GenAI SDK (`google-genai`)** with Gemini 2.5 Flash.
+BusinessLens AI is a multi-agent business consulting platform that helps organizations analyze business challenges and generate actionable strategic recommendations using Google's Gemini API.
 
----
+Users provide a business description and the challenges they are facing. A Planner Agent determines which specialist agents are required, orchestrates the workflow, and combines their outputs into a structured executive consulting report.
 
-## 🎛️ Multi-Agent Architecture Trace
-
-The workflow operates sequentially through four specialized agent nodes:
-1. **Planner**: Ingests context prompts and uses structured JSON formatting to decide which down-line systems must run.
-2. **Research**: Gathers external trends, competitors, and demographic scaling criteria into a strict JSON data structure.
-3. **Analysis**: Evaluates internal company financial stability, unit economics metrics, and operational bottlenecks.
-4. **Strategy**: Combines previous telemetry logs to generate an authoritative corporate consulting blueprint in clean Markdown.
+The platform also provides a modern dashboard with live agent execution tracking, business health visualization, and report export capabilities.
 
 ---
 
-## 🚀 Execution & Setup Protocol
+## Features
 
-### 1. Backend Ingestion Layer
-Navigate to the server directory, establish a isolated virtual execution environment, and install your core system libraries:
+- Multi-agent workflow powered by Google Gemini
+- Dynamic Planner Agent that selects downstream agents based on the problem
+- Specialized Research, Analysis, and Strategy agents
+- Live execution timeline showing agent status
+- Business Health Score dashboard
+- Executive consulting report generation
+- Export reports as PDF, Markdown, and TXT
+- SQLite-backed persistence for projects and reports
+- Modern React + Tailwind dashboard
+- FastAPI REST backend
+
+---
+
+## Architecture
+
+```
+                   User
+                     │
+                     ▼
+          React + Tailwind Frontend
+                     │
+                     ▼
+              FastAPI Backend
+                     │
+                     ▼
+              Planner Agent
+                     │
+      ┌──────────────┼──────────────┐
+      ▼              ▼              ▼
+ Research Agent  Analysis Agent  Strategy Agent
+      │              │              │
+      └──────────────┼──────────────┘
+                     ▼
+         Executive Consulting Report
+                     │
+                     ▼
+                 SQLite Database
+```
+
+---
+
+## Agent Workflow
+
+### Planner Agent
+- Understands the business problem
+- Decides which specialist agents should execute
+- Creates the execution plan
+
+### Research Agent
+- Analyzes the industry
+- Identifies competitors
+- Finds market trends and opportunities
+
+### Analysis Agent
+- Evaluates operational, financial, and marketing issues
+- Identifies potential risks
+- Estimates business impact
+
+### Strategy Agent
+- Combines insights from previous agents
+- Generates the final consulting report
+- Creates recommendations and implementation roadmap
+
+---
+
+## Dashboard Features
+
+### Live Agent Timeline
+
+Track every stage of execution in real time.
+
+```
+✓ Planner
+✓ Research
+✓ Analysis
+✓ Strategy
+```
+
+Each agent displays one of the following states:
+
+- Pending
+- Running
+- Completed
+- Bypassed
+- Failed
+
+---
+
+### Business Health Dashboard
+
+The generated report includes health scores across four business dimensions.
+
+- Finance
+- Marketing
+- Operations
+- Growth
+
+These scores provide a quick overview of the organization's current state.
+
+---
+
+### Report Export
+
+Export consulting reports in multiple formats.
+
+- PDF
+- Markdown (.md)
+- Plain Text (.txt)
+
+---
+
+## Tech Stack
+
+### Frontend
+
+- React
+- Vite
+- Tailwind CSS
+
+### Backend
+
+- FastAPI
+- SQLAlchemy
+- Pydantic
+
+### AI
+
+- Google Gemini API
+- Multi-Agent Orchestration
+
+### Database
+
+- SQLite
+
+---
+
+## Project Structure
+
+```
+businesslens-ai/
+
+backend/
+│
+├── agents.py
+├── orchestrator.py
+├── gemini.py
+├── database.py
+├── models.py
+├── schemas.py
+└── main.py
+
+frontend/
+│
+├── src/
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+│
+├── package.json
+├── vite.config.js
+└── tailwind.config.js
+
+README.md
+.env.example
+.gitignore
+```
+
+---
+
+## Installation
+
+### Clone the repository
+
+```bash
+git clone https://github.com/anjipoo/businesslens-ai.git
+cd businesslens-ai
+```
+
+### Backend
+
 ```bash
 cd backend
+
 python -m venv venv
-source venv/bin/activate # Windows Terminal: .\venv\Scripts\activate
-
-# Install essential dependencies
-pip install fastapi uvicorn sqlalchemy pydantic google-genai
 ```
-Export your Google API validation key to the shell execution stack:
+
+Windows
+
 ```bash
-export GEMINI_API_KEY="AIzaSyYourKeyGoesHere"
-# Windows PowerShell: $env:GEMINI_API_KEY="AIzaSyYourKeyGoesHere"
+venv\Scripts\activate
 ```
-Fire up the FastAPI production development thread:
+
+Linux / macOS
+
 ```bash
-uvicorn main:app --reload --port 8000
+source venv/bin/activate
 ```
 
+Install dependencies
 
-### 2. Frontend User Workspace
-In a fresh concurrent terminal window, activate the asset server:
+```bash
+pip install -r requirements.txt
+```
+
+Create a `.env` file.
+
+```env
+GEMINI_API_KEY=YOUR_API_KEY
+```
+
+Run the backend.
+
+```bash
+uvicorn main:app --reload
+```
+
+---
+
+### Frontend
+
 ```bash
 cd frontend
+
 npm install
-npm run dev -- --force
+
+npm run dev
 ```
 
-Open `http://localhost:5173` to launch the upgraded user workbench.
+The application will be available at:
 
-## 🌐 Production Deployment Guide
-Backend: Render / DigitalOcean App Platform
-1. Set up a Git sub-tree repository mapping exclusively to the /backend directory.
-2. Define the execution base image runtime stack as Python 3.11+.
-3. Configure the start command to launch your application server:
-```bash
-uvicorn main:app --host 0.0.0.0 --port $PORT
 ```
-4. **CRITICAL STEP**: Add your production GEMINI_API_KEY directly inside the deployment dashboard's Environment Variables panel to keep it safe and hidden.
+http://localhost:5173
+```
+
+---
+
+## Future Improvements
+
+- Web search tools for richer market research
+- Historical report comparison
+- Interactive analytics dashboard
+- Team workspaces
+- Cloud database support
+- Additional business specialist agents
+
+---
+
+## Why BusinessLens AI?
+
+BusinessLens AI demonstrates how agent-based AI systems can solve real-world business problems by breaking complex analysis into specialized tasks. Instead of relying on a single prompt, the platform coordinates multiple agents that collaborate to produce structured, explainable, and actionable business recommendations.
+
+This project was built as part of the **Kaggle 5-Day AI Agents Intensive Capstone** using Google's Gemini ecosystem.
