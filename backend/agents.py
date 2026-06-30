@@ -2,24 +2,32 @@ from pydantic import BaseModel, Field
 from typing import List
 from gemini import gemini_client
 
-# --- Strict, Fully Articulated Pydantic Target Nodes ---
+# --- Upgraded Dynamic Planner Pydantic Rule Engine ---
 class PlannerDecision(BaseModel):
-    selected_agents: List[str] = Field(
-        description="Explicit agent nodes slated for execution block. Choices strictly bounded by: ['Research', 'Analysis', 'Strategy']."
+    run_research: bool = Field(
+        description="Set to true if external macroeconomic, trends, or competitive industry validation metrics are required."
     )
-    reasoning: str = Field(description="Deep chain-of-thought structural diagnostic justifying the inclusion or exclusion of specific agent modules.")
+    run_analysis: bool = Field(
+        description="Set to true if internal corporate diagnostics, capital burn vulnerabilities, runway longevity calculations, or talent dependency evaluations are required."
+    )
+    run_strategy: bool = Field(
+        description="Set to true if a synthesized final high-level corporate management consulting report should be generated based on available inputs."
+    )
+    reasoning: str = Field(
+        description="Rigorous analytical explanation detailing precisely why specific agents are assigned to run or skip based on the profile context."
+    )
 
 class ResearchOutput(BaseModel):
-    market_size: str = Field(description="Total Addressable Market (TAM) validation, segmented growth vectors, and sizing boundaries.")
-    competitors: List[str] = Field(description="Granular competitor matrix detailing primary incumbents and secondary disruptive threats.")
-    trends: List[str] = Field(description="Macroeconomic, technological, and consumer behavior structural velocity trends.")
+    market_size: str = Field(description="Target market size estimate and addressable metrics.")
+    competitors: List[str] = Field(description="Key industry players or market alternatives identified.")
+    trends: List[str] = Field(description="Top technological or economic trends driving the market segment.")
 
 class AnalysisOutput(BaseModel):
-    strengths: List[str] = Field(description="Core company operational advantages, IP moats, or market leverage vectors.")
-    weaknesses: List[str] = Field(description="Internal vulnerabilities, tech debt liabilities, structural capital deficiencies, or talent dependencies.")
-    capital_efficiency: str = Field(description="Advanced financial health diagnostics focusing on operational burn velocity, runway leverage, and unit economics.")
+    strengths: List[str] = Field(description="Core company advantages or value vectors.")
+    weaknesses: List[str] = Field(description="Structural vulnerabilities, data overhead risks, or resource gaps.")
+    capital_efficiency: str = Field(description="Assessment of unit economics, cost structures, or estimated runway.")
 
-# --- Optimized Multi-Stage Agent Prompts ---
+# --- Base Agent Class Core ---
 class BaseAgent:
     def __init__(self, name: str, system_instruction: str, response_schema=None):
         self.name = name
@@ -33,15 +41,17 @@ class BaseAgent:
             response_schema=self.response_schema
         )
 
+# --- Updated Planner Architecture Persona ---
 class PlannerAgent(BaseAgent):
     def __init__(self):
         super().__init__(
             name="Planner",
             system_instruction=(
-                "You are the Lead Technical Director of BusinessLens AI. Your task is to ingest raw enterprise briefs "
-                "and systematically delegate targets to downstream expert systems. Assess if the context demands external "
-                "market research datasets ('Research'), internal structural financial diagnostics ('Analysis'), or both. "
-                "Provide a rigorous corporate reason for your execution sequence."
+                "You are the supreme Orchestration Director of BusinessLens AI. Analyze the input text profile. "
+                "Determine exactly which expert modules (Research, Analysis, Strategy) are essential to solve the request. "
+                "Do NOT always execute every node. If the context contains sufficient internal metrics but lacks market landscape data, "
+                "run Research and skip Analysis. If the request only asks for a basic audit structure or focuses on an internal operational bottleneck, "
+                "skip external Research. Output your configuration strictly according to the boolean schema flags."
             ),
             response_schema=PlannerDecision
         )
@@ -50,11 +60,7 @@ class ResearchAgent(BaseAgent):
     def __init__(self):
         super().__init__(
             name="Research",
-            system_instruction=(
-                "You are an elite quantitative Market Research Agent. Your task is to process context and extract "
-                "precise data frameworks. Evaluate target industry addressability, map out primary competitor moats, "
-                "and identify high-velocity technological and macroeconomic movements. Output must strictly conform to the JSON schema."
-            ),
+            system_instruction="You are a primary market research agent. Extract demographic scale metrics, competitor landscapes, and industry trends based on the input text profile.",
             response_schema=ResearchOutput
         )
 
@@ -62,11 +68,7 @@ class AnalysisAgent(BaseAgent):
     def __init__(self):
         super().__init__(
             name="Analysis",
-            system_instruction=(
-                "You are an expert Corporate CFO and Risk Auditor AI. Your task is to conduct an internal diagnostic audit. "
-                "Isolate structural vulnerabilities, key-person risk profiles, capital allocation flaws, and operational friction points. "
-                "Provide clear, actionable assessments of cash burn velocity and runway longevity based on the provided data."
-            ),
+            system_instruction="You are a financial and corporate risk analyst. Evaluate core unit economics vectors, project liabilities, operational bottlenecks, and internal corporate structure gaps.",
             response_schema=AnalysisOutput
         )
 
@@ -74,14 +76,5 @@ class StrategyAgent(BaseAgent):
     def __init__(self):
         super().__init__(
             name="Strategy",
-            system_instruction=(
-                "You are the Principal Management Consultant at a top-tier firm. Your task is to synthesize the foundational data "
-                "provided by the Planner, Research, and Analysis nodes into an exceptional, publication-grade corporate report.\n\n"
-                "CRITICAL FORMATTING INSTRUCTIONS:\n"
-                "- Write exclusively in clean, professional Markdown using clear heading hierarchies (`#`, `##`, `###`).\n"
-                "- Use bold highlights (`**bold**`) to draw attention to key data and metrics.\n"
-                "- Organize your analysis into structural blocks using clear bulleted or numbered lists.\n"
-                "- Use horizontal rules (`---`) to break up major thematic components.\n"
-                "- Ensure the narrative maintains an objective, strategic, and authoritative consulting tone throughout."
-            )
+            system_instruction="You are the lead business strategist. Review all preceding agent inputs, structured logs, and data points to generate a comprehensive, Markdown-formatted professional consulting report outlining structural recommendations and corporate direction."
         )
