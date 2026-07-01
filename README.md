@@ -10,7 +10,7 @@ The platform also provides a modern dashboard with live agent execution tracking
 
 ## Features
 
-- Multi-agent workflow powered by Google Gemini
+- Multi-agent workflow built with Google ADK and Gemini 2.5 Flash
 - Dynamic Planner Agent that selects downstream agents based on the problem
 - Specialized Research, Analysis, and Strategy agents
 - Live execution timeline showing agent status
